@@ -1,34 +1,49 @@
 apply plugin: 'groovy'
-apply plugin: 'maven-publish'
-apply plugin: 'git-repo'
+apply plugin: 'maven'
+//apply plugin: 'git-repo'
+
+group = 'com.layer'
 
 buildscript {
-     repositories {
-         maven { url "https://github.com/layerhq/releases-gradle/raw/master/releases" }
-     }
-     dependencies {
-         classpath group: 'com.layer', name: 'git-repo-plugin', version: '1.0.0'
-     }
+    repositories {
+        mavenCentral()
+    }
 }
 
 apply from: "$rootDir/version.gradle"
+
+
+sourceCompatibility = JavaVersion.VERSION_1_6
+targetCompatibility = JavaVersion.VERSION_1_6
 
 dependencies {
     compile gradleApi()
     compile localGroovy()
 }
 
-publishing {
-    publications {
-        gitRepoPlugin(MavenPublication) {
-            groupId "com.layer"
+//publishing {
+//    publications {
+//        gitRepoPlugin(MavenPublication) {
+//            groupId "com.layer"
+//            artifactId 'git-repo-plugin'
+//            from components.java
+//        }
+//    }
+//    repositories {
+//        maven {
+//            url "file://${System.env.HOME}/.gitRepos/${property("org")}/${property("repo")}/releases"
+//        }
+//    }
+//}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        def deployPath = file("releases")
+        repository(url: "file://${deployPath.absolutePath}")
+        pom.project {
+            groupId project.group
             artifactId 'git-repo-plugin'
-            from components.java
-        }
-    }
-    repositories {
-        maven {
-            url "file://${System.env.HOME}/.gitRepos/${property("org")}/${property("repo")}/releases"
+            version project.version
         }
     }
 }

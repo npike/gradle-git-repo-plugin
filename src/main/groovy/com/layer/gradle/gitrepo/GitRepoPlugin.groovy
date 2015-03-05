@@ -16,8 +16,8 @@ class GitRepoPlugin  implements Plugin<Project> {
 
         // allow declaring special repositories
         if (!project.repositories.metaClass.respondsTo(project.repositories, 'github', String, String, String, String, Object)) {
-            project.repositories.metaClass.github = { String org, String repo, String branch = "master", String type = "releases", def closure = null ->
-                String gitUrl = gitCloneUrl(org, repo)
+            project.repositories.metaClass.github = { String org, String repo, String branch = "master", String type = "releases", String authUser = "git", def closure = null ->
+                String gitUrl = gitCloneUrl(org, repo, authUser)
                 def orgDir = repositoryDir(project, org)
                 addLocalRepo(project, ensureLocalRepo(project, orgDir, repo, gitUrl, branch), type)
             }
@@ -93,8 +93,8 @@ class GitRepoPlugin  implements Plugin<Project> {
         }
     }
 
-    private static String gitCloneUrl(String org, String repo) {
-        return "git@github.com:$org/${repo}.git"
+    private static String gitCloneUrl(String org, String repo, String authUser) {
+        return "${authUser}@github.com:$org/${repo}.git"
     }
 
     private static File ensureLocalRepo(Project project, File directory, String name, String gitUrl, String branch) {
