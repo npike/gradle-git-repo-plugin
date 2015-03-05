@@ -94,7 +94,7 @@ class GitRepoPlugin  implements Plugin<Project> {
     }
 
     private static String gitCloneUrl(String org, String repo, String authUser) {
-        return "${authUser}@github.com:$org/${repo}.git"
+        return "${authUser}@github.com/$org/${repo}.git"
     }
 
     private static File ensureLocalRepo(Project project, File directory, String name, String gitUrl, String branch) {
