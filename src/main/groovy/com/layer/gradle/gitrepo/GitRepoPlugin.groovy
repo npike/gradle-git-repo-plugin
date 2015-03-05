@@ -101,6 +101,7 @@ class GitRepoPlugin  implements Plugin<Project> {
         def repoDir = new File(directory, name)
         if(!repoDir.directory) {
             project.mkdir(directory)
+            project.logger.info("git clone ${gitUrl} ${name}")
             project.exec {
                 workingDir directory
                 executable "git"
